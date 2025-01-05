@@ -8,6 +8,7 @@
   justify-content: flex-start; /* Align cards to the left */
   padding: 20px;
   box-sizing: border-box; /* Ensure padding doesn't affect width */
+  position: relative; /* Enable absolute positioning for the checkbox */
 }
 
 /* Recipe card styles */
