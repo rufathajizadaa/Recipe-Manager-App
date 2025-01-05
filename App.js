@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from "react";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import SortableRecipeCard from "./components/SortableRecipeCard";
 import FeaturedRecipe from "./FeaturedRecipe";
 import Projects from "./Projects";
 import CreateRecipe from "./CreateRecipe";
-import RecipeCard from "./components/RecipeCard";
 import Contact from "./Contact";
 import "./App.css";
 import "./styles.css";
@@ -17,15 +29,25 @@ function App() {
   const [selectedDifficulty, setSelectedDifficulty] = useState(""); // State for difficulty filter
   const [sortOption, setSortOption] = useState(""); // State for sorting option
 
-  const [selectedRecipes, setSelectedRecipes] = useState([]); // **State for selected recipes**
-  const [userEmail, setUserEmail] = useState(""); // **State for user's email**
+
+const [selectedRecipes, setSelectedRecipes] = useState([]);
+const [userEmail, setUserEmail] = useState("");
+
+
+const handleRecipeSelection = (e, recipe) => {
+  if (e.target.checked) {
+    setSelectedRecipes((prev) => [...prev, recipe]);
+  } else {
+    setSelectedRecipes((prev) => prev.filter((r) => r.id !== recipe.id));
+  }
+};
 
 
   const apiUrl = "http://localhost:3000/recipes"; // JSON server API endpoint
 
   // Fetch recipes from JSON server
   useEffect(() => {
-    fetch(apiUrl)
+    fetch(`${apiUrl}?_sort=order&_order=asc`)
       .then((response) => response.json())
       .then((data) => setRecipes(data))
       .catch((error) => console.error("Error fetching recipes:", error));
@@ -33,10 +55,13 @@ function App() {
 
   // Function to add a new recipe
   const addRecipe = (newRecipe) => {
+    const maxOrder = recipes.length > 0 ? Math.max(...recipes.map((r) => r.order)) : 0;
+    const recipeWithOrder = { ...newRecipe, order: maxOrder + 1 };
+
     fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newRecipe),
+      body: JSON.stringify(recipeWithOrder),
     })
       .then((response) => response.json())
       .then((savedRecipe) => {
@@ -126,7 +151,7 @@ function App() {
     };
 
     emailjs
-      .send("service_v52xam9", "template_u43zt9n", emailParams, "AIAe-bsHafs6zrey3")
+      .send("service_rwgf40o", "template_gr2umce", emailParams, "72gZg_PTZYQn0Iohw")
       .then(
         () => alert("Recipes shared successfully!"),
         (error) => {
@@ -186,25 +211,35 @@ function App() {
     sortOption
   );
 
+  // Drag-and-drop functionality
+  const sensors = useSensors(useSensor(PointerSensor));
 
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
 
-  // Function to filter recipes
-  // const filteredRecipes = recipes.filter((recipe) => {
-  //   const query = searchQuery.toLowerCase();
-  //   const matchesSearch =
-  //     recipe.title.toLowerCase().includes(query) ||
-  //     recipe.description.toLowerCase().includes(query) ||
-  //     recipe.ingredients.some((ingredient) =>
-  //       ingredient.toLowerCase().includes(query)
-  //     );
+    if (active.id !== over.id) {
+      const oldIndex = recipes.findIndex((recipe) => recipe.id.toString() === active.id);
+      const newIndex = recipes.findIndex((recipe) => recipe.id.toString() === over.id);
 
-  //   const matchesTag = selectedTag === "" || recipe.tags.includes(selectedTag);
+      const reorderedRecipes = arrayMove(recipes, oldIndex, newIndex);
 
-  //   const matchesDifficulty =
-  //     selectedDifficulty === "" || recipe.difficulty === selectedDifficulty;
+      const updatedRecipes = reorderedRecipes.map((recipe, index) => ({
+        ...recipe,
+        order: index + 1,
+      }));
 
-  //   return matchesSearch && matchesTag && matchesDifficulty;
-  // });
+      setRecipes(updatedRecipes);
+
+      // Persist the new order to the server
+      updatedRecipes.forEach((recipe) => {
+        fetch(`${apiUrl}/${recipe.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ order: recipe.order }),
+        }).catch((error) => console.error("Error updating recipe order:", error));
+      });
+    }
+  };
 
   return (
     <div className="home-page">
@@ -289,7 +324,7 @@ function App() {
                 onChange={(e) => setSortOption(e.target.value)}
                 className="filter-dropdown"
               >
-                <option value="">None</option>
+                <option value="">None (Drag & Drop)</option>
                 <option value="title">Title</option>
                 <option value="createTime">Create Time</option>
                 <option value="updateTime">Update Time</option>
@@ -313,24 +348,31 @@ function App() {
           </button>
         </div>
 
-        <div className="recipe-grid">
-          {filteredRecipes.map((recipe, index) => (
-            <RecipeCard
-              key={index}
-              recipe={recipe}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              isSelected={selectedRecipes.includes(recipe)} // **New prop**
-              onSelect={() =>
-                setSelectedRecipes((prev) =>
-                  prev.includes(recipe)
-                    ? prev.filter((r) => r !== recipe)
-                    : [...prev, recipe]
-                )
-              }
-            />
-          ))}
-        </div>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext
+            items={recipes.map((recipe) => recipe.id.toString())}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="recipe-grid">
+              {/* Map through filtered recipes */}
+              {filteredRecipes.map((recipe) => (
+                <div key={recipe.id} className="recipe-container"> {/* ADDED WRAPPER DIV */}
+                  <input
+                    type="checkbox"
+                    className="recipe-select-checkbox" // ADDED CHECKBOX
+                    onChange={(e) => handleRecipeSelection(e, recipe)} // ADDED onChange HANDLER
+                  />
+                  <SortableRecipeCard
+                    recipe={recipe}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                </div>
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+
       </section>
 
 
@@ -341,3 +383,6 @@ function App() {
 }
 
 export default App;
+
+// json-server --watch db.json --port 3000
+
