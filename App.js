@@ -22,7 +22,7 @@ function App() {
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1); // Current page number
-  const recipesPerPage = 5; // Number of recipes per page
+  const recipesPerPage = 4; // Number of recipes per page
 
   const apiUrl = "http://localhost:3000/recipes"; // JSON server API endpoint
 
@@ -138,31 +138,17 @@ function App() {
       return;
     }
 
-    // Format the selected recipes into a user-friendly format
-    const formattedRecipes = selectedRecipes
-      .map(
-        (recipe) =>
-          `Title: ${recipe.title}\nDescription: ${recipe.description}\nIngredients: ${recipe.ingredients.join(
-            ", "
-          )}\nSteps: ${recipe.steps.join(", ")}\nDifficulty: ${
-            recipe.difficulty
-          }\nTags: ${recipe.tags.join(", ")}\n`
-      )
-      .join("\n\n");
-
     const emailParams = {
       to_email: normalizedEmail,
-      recipes: formattedRecipes, // Include only the formatted selected recipes
+      recipes: JSON.stringify(selectedRecipes, null, 2),
     };
 
-    // Send the email
     emailjs
-      .send(
-        "service_v52xam9",
-        "template_u43zt9n",
-        emailParams,
-        "AIAe-bsHafs6zrey3"
-      )
+      .send("service_748ijwd",
+            "template_gr2umce",
+            emailParams, 
+            "72gZg_PTZYQn0Iohw"
+           )
       .then(
         () => alert("Recipes shared successfully!"),
         (error) => {
@@ -264,18 +250,18 @@ function App() {
                 </li>
                 <li>
                   <NavLink
-                    to="/projects"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                  >
-                    Projects
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
                     to="/create"
                     className={({ isActive }) => (isActive ? "active" : "")}
                   >
                     Create Recipe
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/projects"
+                    className={({ isActive }) => (isActive ? "active" : "")}
+                  >
+                    Projects
                   </NavLink>
                 </li>
                 <li>
@@ -297,56 +283,65 @@ function App() {
             element={
               <section className="recipe-list">
                 {/* Search, Filter, Sort Section */}
-                <div className="search-filter-section">
-                  <input
-                    type="text"
-                    placeholder="Search recipes..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="search-bar"
-                  />
-                  <div className="filter-container">
-                    <select
-                      value={selectedTag}
-                      onChange={(e) => setSelectedTag(e.target.value)}
-                      className="filter-dropdown"
-                    >
-                      <option value="">All Tags</option>
-                      {[...new Set(recipes.flatMap((recipe) => recipe.tags))].map(
-                        (tag, index) => (
-                          <option key={index} value={tag}>
-                            {tag}
-                          </option>
-                        )
-                      )}
-                    </select>
-                    <select
-                      value={selectedDifficulty}
-                      onChange={(e) => setSelectedDifficulty(e.target.value)}
-                      className="filter-dropdown"
-                    >
-                      <option value="">All Difficulty Levels</option>
-                      {[...new Set(recipes.map((recipe) => recipe.difficulty))].map(
-                        (difficulty, index) => (
-                          <option key={index} value={difficulty}>
-                            {difficulty}
-                          </option>
-                        )
-                      )}
-                    </select>
-                    <select
-                      value={sortOption}
-                      onChange={(e) => setSortOption(e.target.value)}
-                      className="filter-dropdown"
-                    >
-                      <option value="">None</option>
-                      <option value="title">Title</option>
-                      <option value="createTime">Create Time</option>
-                      <option value="updateTime">Update Time</option>
-                      <option value="difficulty">Difficulty</option>
-                    </select>
+                <section className="search-filter-section">
+                  <div className="search-filter-div">
+                    <h2>Explore Recipes</h2>
+                    <div className="search-bar-container">
+                      <input
+                        type="text"
+                        placeholder="Search recipes..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="search-bar"
+                      />
+                    </div>
+                    <div className="filter-container">
+                      <select
+                        value={selectedTag}
+                        onChange={(e) => setSelectedTag(e.target.value)}
+                        className="filter-dropdown"
+                      >
+                        <option value="">All Tags</option>
+                        {[...new Set(recipes.flatMap((recipe) => recipe.tags))].map(
+                          (tag, index) => (
+                            <option key={index} value={tag}>
+                              {tag}
+                            </option>
+                          )
+                        )}
+                      </select>
+                      <select
+                        value={selectedDifficulty}
+                        onChange={(e) => setSelectedDifficulty(e.target.value)}
+                        className="filter-dropdown"
+                      >
+                        <option value="">All Difficulty Levels</option>
+                        {[...new Set(recipes.map((recipe) => recipe.difficulty))].map(
+                          (difficulty, index) => (
+                            <option key={index} value={difficulty}>
+                              {difficulty}
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </div>
+                    <div className="sorting-container">
+                      <label htmlFor="sortOptions">Sort by: </label>
+                      <select
+                        id="sortOptions"
+                        value={sortOption}
+                        onChange={(e) => setSortOption(e.target.value)}
+                        className="filter-dropdown"
+                      >
+                        <option value="">None</option>
+                        <option value="title">Title</option>
+                        <option value="createTime">Create Time</option>
+                        <option value="updateTime">Update Time</option>
+                        <option value="difficulty">Difficulty</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
+                </section>
 
                 {/* Share Recipes Section */}
                 <div className="share-recipes-container">
@@ -390,9 +385,8 @@ function App() {
                       <button
                         key={index + 1}
                         onClick={() => handlePageChange(index + 1)}
-                        className={`pagination-button ${
-                          currentPage === index + 1 ? "active" : ""
-                        }`}
+                        className={`pagination-button ${currentPage === index + 1 ? "active" : ""
+                          }`}
                       >
                         {index + 1}
                       </button>
@@ -409,9 +403,28 @@ function App() {
               </section>
             }
           />
-          <Route path="/featured" element={<FeaturedRecipe />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/create" element={<CreateRecipe addRecipe={addRecipe} />} />
+          <Route path="/featured" element={
+            <section className="featured-recipe">
+              <h3>Featured Recipe</h3>
+              <h6>Explore the most recently added recipe, handpicked just for you!</h6>
+              {recipes.length > 0 ? (
+                <FeaturedRecipe recipe={recipes[recipes.length - 1]} />
+              ) : (
+                <p>No recipes available yet. Start adding your favorite recipes!</p>
+              )}
+            </section>
+          } />
+          <Route path="/projects" element={
+            <div className="projects">
+              <h2>Our Projects</h2>
+              <Projects />
+            </div>
+          } />
+          <Route path="/create" element={
+            <section className="create-recipe-section">
+            <CreateRecipe addRecipe={addRecipe} />
+          </section>
+          } />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
@@ -420,3 +433,6 @@ function App() {
 }
 
 export default App;
+
+
+// json-server --watch db.json --port 3000

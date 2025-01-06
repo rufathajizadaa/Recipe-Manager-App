@@ -39,12 +39,12 @@ body {
 
 .header h1 {
   font-size: 3.5em;
-  color: #2c3e50;
+  color: #161762;
 }
 
 .header p {
   font-size: 1.2em;
-  color: #2c3e50;
+  color: #161762;
   font-weight: bold;
 }
 
@@ -52,12 +52,21 @@ body {
 .featured-recipe {
   border: 1px solid #ddd;
   background-color: #ffffff;
-  margin: 100px auto 0 auto;
+  margin: 70px auto 70px auto;
   padding: 20px;
   width: 400px;
   text-align: center;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.featured-recipe h6{
+  text-align: center;
+  margin: 0 auto 40px auto;
+  font-size: 20px;
+  width: 300px;
+  font-weight: lighter;
+  color: #666;
 }
 
 .featured-recipe h3 {
@@ -86,7 +95,7 @@ body {
 
 /* Projects Section */
 .projects {
-  margin: 100px auto 0 auto;
+  margin: 70px auto 70px auto;
   padding: 20px;
   width: 1000px;
   text-align: center;
@@ -152,7 +161,7 @@ body {
 }
 
 .recipe-grid {
-  margin-top: 20px;
+  margin: 50px auto 0px auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px 70px;
@@ -161,10 +170,11 @@ body {
 /* Create Recipe Form */
 
 .create-recipe-section {
-  margin-top: 100px;
+  margin: 70px auto 70px auto;
 }
 
 .create-recipe {
+  margin-bottom: 200px;
   background-color: #f9f9f9;
   padding: 30px 55px 30px 30px;
   border-radius: 10px;
@@ -265,7 +275,7 @@ body {
 }
 
 .search-filter-section {
-  margin-top: 100px;
+  margin-top: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -310,6 +320,15 @@ body {
   font-size: 16px;
 }
 
+
+.sorting-container {
+  margin: 0 0 -10px 0;
+}
+
+.filter-dropdown {
+  padding: 5px;
+  font-size: 14px;
+} 
 
 /* Edit Form Styles */
 
@@ -407,22 +426,10 @@ body {
 }
 
 
-/* aorting styles */
-
-.sorting-container {
-  margin: 0 0 -10px 0;
-}
-
-.filter-dropdown {
-  padding: 5px;
-  font-size: 14px;
-}
-
-
 /* sending email part */
 /* General container for the email sharing section */
 .share-recipes-container {
-  margin: 20px auto 50px auto;
+  margin: 20px auto;
   padding: 15px;
   max-width: 400px;
   background-color: #f9f9f9;
@@ -487,29 +494,3 @@ body {
   cursor: not-allowed;
   box-shadow: none;
 }
-
-
-/* checkbox */
-
-.recipe-select-checkbox {
-  position: absolute; /* Position the checkbox within the container */
-  top: -13px; /* Distance from the top */
-  left: 20px; /* Distance from the left (instead of right) */
-  z-index: 10; /* Ensure the checkbox is on top of the card */
-  cursor: pointer; /* Show pointer cursor on hover */
-  width: 20px; /* Set the size of the checkbox */
-  height: 20px; /* Set the size of the checkbox */
-  background-color: transparent; /* Optional, to make the background transparent */
-}
-
-/* Optional styling to improve checkbox appearance */
-.recipe-select-checkbox:checked {
-  background-color: #4CAF50; /* Green when checked */
-  border-color: #4CAF50; /* Green border */
-}
-
-.recipe-select-checkbox:focus {
-  outline: none; /* Remove focus outline */
-  border: 2px solid #4CAF50; /* Green border on focus */
-}
-

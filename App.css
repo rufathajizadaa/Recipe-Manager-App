@@ -1,5 +1,10 @@
 /* App.css */
 
+body, html {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
 /* Container for the recipe cards */
 .recipe-container {
   display: flex;
@@ -8,7 +13,6 @@
   justify-content: flex-start; /* Align cards to the left */
   padding: 20px;
   box-sizing: border-box; /* Ensure padding doesn't affect width */
-  position: relative; /* Enable absolute positioning for the checkbox */
 }
 
 /* Recipe card styles */
@@ -94,5 +98,126 @@
   .featured-recipe {
     width: 100%; /* Full width for the featured recipe on mobile */
     margin-right: 0;
+  }
+}
+
+
+.navbar{
+  width: 100%; /* NEW: Make the navbar span the full width of the viewport */
+}
+
+/* Navigation container */
+.nav-links {
+  display: flex;
+  justify-content: center  ;
+  align-items: center;
+  list-style: none;
+  gap: 0px; /* Space between links */
+  padding: 0 0;
+  background-color: #f8f9fa; /* Light background for the navbar */
+  border-bottom: 1px solid #e0e0e0; /* Optional border */
+  margin: 0;
+}
+
+/* Style for each link */
+.nav-links a {
+  display: inline-block;
+  width: 230px;
+  text-decoration: none;
+  color: #161762; /* Blue color for links */
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 12px;
+  position: relative; /* NEW: Position required for pseudo-element */
+  transition: color 0.3s; /* Smooth color transition */
+}
+
+.nav-links a::after {
+  content: ""; /* Empty content for the pseudo-element */
+  position: absolute;
+  left: 0;
+  bottom: 0; /* Align at the bottom of the link */
+  width: 0; /* Initially, no underline */
+  height: 3px; /* NEW: Thickness of the underline */
+  background-color: #212388; /* NEW: Underline color */
+  transition: width 0.3s ease; /* Smooth expand effect */
+}
+
+.nav-links a:hover {
+  color: #212388; /* Optional: Change text color on hover */
+}
+
+.nav-links a:hover::after {
+  width: 100%; /* Expand underline on hover */
+}
+
+.nav-links a.active {
+  background-color: #161762; /* Darker blue for active link */
+  color: #ffffff; /* White text */
+}
+
+/* Responsive styling for mobile */
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+  }
+}
+
+
+/* Pagination Container */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+  gap: 8px;
+}
+
+/* Pagination Buttons */
+.pagination-button {
+  padding: 8px 12px;
+  border: 1px solid #161762;
+  background-color: #ffffff;
+  color: #161762;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover Effect for Pagination Buttons */
+.pagination-button:hover {
+  background-color: #161762;
+  color: #ffffff;
+}
+
+/* Active Page Button */
+.pagination-button.active {
+  background-color: #161762;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Disabled Button State */
+.pagination-button:disabled {
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+/* Responsive Spacing */
+@media (max-width: 768px) {
+  .pagination {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .pagination-button {
+    padding: 6px 10px;
   }
 }
