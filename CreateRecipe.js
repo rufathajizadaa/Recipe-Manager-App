@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import "./App.css";
+import "./styles.css";
+import "./contact.css";
 
 function CreateRecipe({ addRecipe }) {
   const [formData, setFormData] = useState({
@@ -10,7 +13,7 @@ function CreateRecipe({ addRecipe }) {
     difficulty: "Easy",
   });
 
-  const [lastUpdated, setLastUpdated] = useState(null);
+  // const [lastUpdated, setLastUpdated] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +61,7 @@ function CreateRecipe({ addRecipe }) {
 
     addRecipe(newRecipe);
 
-    setLastUpdated(newRecipe.lastUpdated);
+    // setLastUpdated(newRecipe.lastUpdated);
 
     // Reset the form
     setFormData({
