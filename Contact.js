@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 function Contact() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     subject: "",
     email: "",
@@ -16,7 +15,7 @@ function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Send message to json-server
+    // Send message to JSON server
     const response = await fetch("http://localhost:3000/messages", {
       method: "POST",
       headers: {
@@ -32,7 +31,6 @@ function Contact() {
         email: "",
         message: "",
       });
-      setIsModalOpen(false); // Close the modal after sending the message
     } else {
       alert("There was an error sending your message.");
     }
@@ -40,58 +38,53 @@ function Contact() {
 
   return (
     <div className="contact">
-      <button onClick={() => setIsModalOpen(true)} className="contact-button">
-        Contact Us
-      </button>
+      <h2>Contact Us</h2>
+      <form onSubmit={handleSubmit} className="contact-form">
+        <label htmlFor="subject" className="contact-label">
+          Subject:
+        </label>
+        <input
+          type="text"
+          id="subject"
+          name="subject"
+          className="contact-input"
+          placeholder="Enter the subject of your message"
+          value={formData.subject}
+          onChange={handleInputChange}
+          required
+        />
 
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="close-button"
-            >
-              &times;
-            </button>
-            <h2>Contact Us</h2>
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="subject">Subject:</label>
-              <input
-                type="text"
-                id="subject"
-                name="subject"
-                placeholder="Enter the subject of your message"
-                value={formData.subject}
-                onChange={handleInputChange}
-                required
-              />
+        <label htmlFor="email" className="contact-label">
+          Email:
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          className="contact-input"
+          placeholder="Enter your email address"
+          value={formData.email}
+          onChange={handleInputChange}
+          required
+        />
 
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Enter your email address"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
+        <label htmlFor="message" className="contact-label">
+          Message:
+        </label>
+        <textarea
+          id="message"
+          name="message"
+          className="contact-textarea"
+          placeholder="Write your message here"
+          value={formData.message}
+          onChange={handleInputChange}
+          required
+        ></textarea>
 
-              <label htmlFor="message">Message:</label>
-              <textarea
-                id="message"
-                name="message"
-                placeholder="Write your message here"
-                value={formData.message}
-                onChange={handleInputChange}
-                required
-              ></textarea>
-
-              <button type="submit">Send Message</button>
-            </form>
-          </div>
-        </div>
-      )}
+        <button type="submit" className="contact-submit">
+          Send Message
+        </button>
+      </form>
     </div>
   );
 }
