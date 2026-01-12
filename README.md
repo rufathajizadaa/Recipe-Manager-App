@@ -6,7 +6,7 @@ This project is designed with modular components, scalable API integration, and 
 
 ---
 
-## 🚀 Features
+## Features
 
 ### Recipe Management
 - Create, edit, and delete recipes
@@ -45,7 +45,7 @@ Each recipe includes:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **React** (Functional Components & Hooks)
